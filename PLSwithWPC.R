@@ -98,14 +98,6 @@ for (i in 2:D){
   resst = mvr(y~Z, ncomp = comp, method = "simpls") 
   h = as.numeric(resst$loadings)[c(1, D)]
   H[i,] = h
-  U = as.numeric(resst$scores)[c(1, n+1)]
-  if((sign(U[1])!=sign(G[1,1]))  & (sign(U[2])==sign(G[1,2]))){
-    H[i, 1] = -h[1]
-  }else if ((sign(U[1])==sign(G[1,1]))  & (sign(U[2])!=sign(G[1,2]))){
-    H[i, 2] = -h[2]
-  }else if ((sign(U[1])!=sign(G[1,1]))  & (sign(U[2])!=sign(G[1,2]))){
-    H[i, ] = -h
-  }
 }
 H = 1*H # Scale loadings so that the arrows (points, respectively) are more visible in the biplot?
 
