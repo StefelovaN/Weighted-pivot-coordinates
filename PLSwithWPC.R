@@ -99,7 +99,10 @@ for (i in 2:D){
   h = as.numeric(resst$loadings)[c(1, D)]
   H[i,] = h
 }
-H = 1*H # Scale loadings so that the arrows (points, respectively) are more visible in the biplot?
+
+# scaling constant
+scon = round(min(max(G[,1])/max(H[,1]), min(G[,1])/min(H[,1]), max(G[,2])/max(H[,2]), min(G[,2])/min(H[,2])), 1)
+H = scon*H
 
 colnames(G) = c("Comp1", "Comp2")
 colnames(H) = c("Comp1", "Comp2")
@@ -111,7 +114,7 @@ H$Angle = ((180/pi)*atan(H$Comp2/H$Comp1))
 H$Adj = (1-1.5*sign(H$Comp1))/2
 
 pdf("PLSbiplot.pdf")
-g = ggplot(G, aes(x = Comp1, y = Comp2)) +
+ggplot(G, aes(x = Comp1, y = Comp2)) +
   geom_point() +
   geom_segment(data = H, aes(x = 0, y = 0, xend = Comp1, yend = Comp2),
                arrow = arrow(length = unit(1/2, "picas")), colour = c("blue","grey","red")[factor(signary)]) +
@@ -119,9 +122,12 @@ g = ggplot(G, aes(x = Comp1, y = Comp2)) +
             size = 3, colour = c("blue","grey","red")[factor(signary)]) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
   geom_vline(xintercept = 0, linetype = "dashed", color = "black") +
-  xlab("PLS comp. 1") + ylab("PLS comp. 2") +
-  theme_classic() + 
-  theme(axis.text = element_blank(), axis.ticks = element_blank(),
-        axis.title = element_text(size = 15, vjust = 2, face = "bold"))
-g + coord_fixed(ratio = 1) # Change ratio between y-axis and x-axis scale?
+  scale_x_continuous("PLS comp. 1 (scores)",  sec.axis = sec_axis(~ . / scon, name = "PLS comp. 1 (loadings)")) +
+  scale_y_continuous("PLS comp. 2 (scores)",  sec.axis = sec_axis(~ . / scon, name = "PLS comp. 2 (loadings)")) +
+  theme(panel.background=element_blank(),
+        axis.line = element_line(color="black"),
+        axis.title.x.bottom = element_text(size = 15, face = "bold", margin = margin(t = 10)),
+        axis.title.y.left = element_text(size = 15, face = "bold", margin = margin(r = 10)),
+        axis.title.x.top = element_text(size = 15, face = "bold", margin = margin(b = 10)),
+        axis.title.y.right = element_text(size = 15, face = "bold", margin = margin(l = 10)))
 dev.off()
