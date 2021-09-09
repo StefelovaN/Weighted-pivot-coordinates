@@ -23,7 +23,6 @@ weightPivotCoord = function(x, pivotvar = 1, option = "var", method = "classical
   #                 if option = "robust", robust estimation is applied;
   #        pow - if option = "var", power pow is applied on unnormalized weights; default is 1;
   #        yvar - if option = "cor", weights are based on correlation between logratios and variable specified in yvar;
-  #        cut - if option = "cor", cut specifies cutpoin for r_{j} to be treated as 0 in order to estimate f(x);
   # OUTPUT: WPC - weighted pivot coordinates (matrix with n rows and (D-1) columns);
   #         w - logcontrasts (matrix with D rows and (D-1) columns)
   
